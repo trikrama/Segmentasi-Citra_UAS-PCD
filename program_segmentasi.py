@@ -1,0 +1,21 @@
+import cv2
+import numpy as np
+image = cv2.imread("biji_kopi.jpg")
+print('Image', image)
+scale_percent = 60
+width = int(image.shape[1] * scale_percent / 100)
+height = int(image.shape[0] * scale_percent / 100)
+dim = (width, height)
+resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+cv2.imshow("Gambar Kopi Original", resized)
+gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+cv2.imshow("Grayscale ", gray)
+ret, thresh = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY_INV)
+cv2.imshow('Binary Threshold Inverted', thresh)
+kernel = np.ones((1,1),np.uint8)
+opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+cv2.imshow('Opening', opening)
+dest_and = cv2.bitwise_and(resized,resized,mask = opening)
+cv2.imshow('Bitwise And', dest_and)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
